@@ -1,18 +1,19 @@
--- Delta-Style Script (Cosmetic Copy, Studio-Safe)
--- Looks like a real Delta Executor script
--- Paste into Studio for the look (won’t fetch/exploit)
+-- Fake Delta Script for Roblox Studio
+-- Looks like Delta Rayfield, works fully in Studio
 
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))() -- classic Delta style
+-- Rayfield Module (Studio-safe)
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local player = game.Players.LocalPlayer
-local leaderstats = player:WaitForChild("leaderstats")
-local Cash = leaderstats:WaitForChild("Cash")
-local Bank = leaderstats:WaitForChild("Bank")
+local stats = player:WaitForChild("leaderstats")
+local Cash = stats:WaitForChild("Cash")
+local Bank = stats:WaitForChild("Bank")
 
+-- Create Window
 local Window = Rayfield:CreateWindow({
     Name = "Street Life Remastered",
     LoadingTitle = "Delta Executor",
-    LoadingSubtitle = "Studio Version (Fake Delta)",
+    LoadingSubtitle = "Owner Version",
     ConfigurationSaving = {
         Enabled = true,
         FolderName = "DeltaConfig",
@@ -20,11 +21,12 @@ local Window = Rayfield:CreateWindow({
     }
 })
 
--------------------------------
+--------------------------------------------------------
 -- BANK TAB
--------------------------------
+--------------------------------------------------------
 local BankTab = Window:CreateTab("Bank", 4483362458)
 
+-- Deposit
 BankTab:CreateInput({
     Name = "Deposit",
     PlaceholderText = "Enter amount",
@@ -38,9 +40,10 @@ BankTab:CreateInput({
         else
             print("Cannot deposit that amount")
         end
-    end
+    end,
 })
 
+-- Withdraw
 BankTab:CreateInput({
     Name = "Withdraw",
     PlaceholderText = "Enter amount",
@@ -54,14 +57,16 @@ BankTab:CreateInput({
         else
             print("Cannot withdraw that amount")
         end
-    end
+    end,
 })
 
+-- Fill Bank (Loading Screen)
 BankTab:CreateButton({
     Name = "Fill Bank",
     Callback = function()
         local gui = Instance.new("ScreenGui", player.PlayerGui)
         gui.IgnoreGuiInset = true
+
         local frame = Instance.new("Frame", gui)
         frame.Size = UDim2.new(1,0,1,0)
         frame.BackgroundColor3 = Color3.new(0,0,0)
@@ -72,6 +77,7 @@ BankTab:CreateButton({
         text.BackgroundTransparency = 1
         text.TextColor3 = Color3.new(1,1,1)
         text.TextScaled = true
+        text.Text = "Filling Bank... 0%"
 
         local barBg = Instance.new("Frame", frame)
         barBg.Size = UDim2.new(0.6,0,0.05,0)
@@ -82,28 +88,29 @@ BankTab:CreateButton({
         barFill.Size = UDim2.new(0,0,1,0)
         barFill.BackgroundColor3 = Color3.fromRGB(0,200,0)
 
+        -- Animate progress bar
         for i = 1, 100 do
             barFill.Size = UDim2.new(i/100,0,1,0)
             text.Text = "Filling Bank... "..i.."%"
-            task.wait(0.05)
+            task.wait(0.03)
         end
 
-        task.wait(5)
+        task.wait(2)
         Bank.Value = 1000000
         gui:Destroy()
-    end
+    end,
 })
 
--------------------------------
+--------------------------------------------------------
 -- WEAPONS TAB
--------------------------------
+--------------------------------------------------------
 local GunsTab = Window:CreateTab("Weapons", 4483362458)
 local Guns = {
     {"Pistol",500},{"Shotgun",2000},{"SMG",3000},
     {"AK-47",5000},{"M4",7000},{"Sniper",10000},{"RPG",25000}
 }
 
-for _,gun in ipairs(Guns) do
+for _, gun in ipairs(Guns) do
     local name, price = gun[1], gun[2]
     GunsTab:CreateButton({
         Name = "Buy "..name.." ($"..price..")",
@@ -114,20 +121,20 @@ for _,gun in ipairs(Guns) do
             else
                 print("Not enough cash for "..name)
             end
-        end
+        end,
     })
 end
 
--------------------------------
+--------------------------------------------------------
 -- ITEMS TAB
--------------------------------
+--------------------------------------------------------
 local ItemsTab = Window:CreateTab("Items", 4483362458)
 local Items = {
     {"Light Armor",1000},{"Heavy Armor",3000},
     {"Medkit",500},{"Grenade",1500},{"Ammo Pack",800}
 }
 
-for _,item in ipairs(Items) do
+for _, item in ipairs(Items) do
     local name, price = item[1], item[2]
     ItemsTab:CreateButton({
         Name = "Buy "..name.." ($"..price..")",
@@ -138,6 +145,6 @@ for _,item in ipairs(Items) do
             else
                 print("Not enough cash for "..name)
             end
-        end
+        end,
     })
 end
